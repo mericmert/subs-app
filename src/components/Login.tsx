@@ -1,6 +1,6 @@
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-
+import Logo from './Logo';
 import type { ComponentStyle } from "@/utils/type";
 import Link from "next/link";
 let loginComponentStyle: ComponentStyle = {
@@ -10,12 +10,7 @@ let loginComponentStyle: ComponentStyle = {
 export default function Login() {
     return (
         <div className="w-full h-screen flex flex-col justify-center items-center p-6 gap-y-16">
-            <Link href={"/"} className="logo-container">
-                <h1 className="text-6xl font-thin text-gray-100">
-                    <span className="text-purple-500">#</span>
-                    subs
-                </h1>
-            </Link>
+            <Logo font_size='6xl'/>
             <div className="login-form-container flex flex-col w-[70vw] h-2/3 items-center">
                 <div className="login-title-container text-center">
                     <h1 className="text-4xl font-semibold mb-2">Login to Your Account</h1>
