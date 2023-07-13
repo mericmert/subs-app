@@ -21,6 +21,14 @@ export default async function handler(
             },
         })
 
+        //associated profile
+        await client.profile.create({
+            data : {
+                username : username,
+                fullName : username,
+            }
+        })
+
         return res.status(200).json(user);
 
     }

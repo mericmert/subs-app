@@ -5,7 +5,7 @@ type logoProps = {
 }
 
 export default function Logo({font_size} : logoProps) {
-
+    
     return (
         <>
             <Link href={"/"} className="logo-container">
