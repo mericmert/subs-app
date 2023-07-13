@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import bcrypt from "bcrypt"
 import client from "@/lib/prismadb";
+import { Prisma } from "@prisma/client";
 
 export default async function handler(
     req: NextApiRequest,
@@ -24,8 +25,12 @@ export default async function handler(
 
     }
     catch (error) {
-        console.log(error);
-        return res.status(400).end();
+        if (error instanceof Prisma.PrismaClientKnownRequestError){
+            return res.status(409).end()   
+        }
+        else{
+            return res.status(400).end();
+        }
     }
 
 

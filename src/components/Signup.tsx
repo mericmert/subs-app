@@ -5,7 +5,7 @@ import Logo from './Logo';
 import type { ComponentStyle, SignUpUser } from "@/utils/type";
 import Link from "next/link";
 import { useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
 let signUpComponentStyle: ComponentStyle = {
@@ -18,32 +18,37 @@ export default function Signup() {
 
     const router = useRouter();
     const [userData, setUserData] = useState<SignUpUser>({
-        email : "",
-        username : "",
-        password : ""
+        email: "",
+        username: "",
+        password: ""
     })
 
-    const handleChange = (event : React.ChangeEvent<HTMLInputElement>) : void => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         setUserData(prev => ({
             ...prev,
-            [event.target.name] : event.target.value
+            [event.target.name]: event.target.value
         }))
     }
-    
-    const handleSubmit = async (event : React.FormEvent<HTMLFormElement>) => {
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setIsLoading(true);
         try {
-            await axios.post("/api/signup", {
-                email : userData.email,
-                username : userData.username,
-                password : userData.password
+            await axios.post("/api/register", {
+                email: userData.email,
+                username: userData.username,
+                password: userData.password
             })
             toast.success("Account has been succesfully created!");
             router.push("/")
         }
-        catch{
-            toast.error("Something went wrong!");
+        catch(e) {
+            if (e instanceof AxiosError && e.response?.status == 409){
+                toast.error("User already exists!");
+            }
+            else{
+                toast.error("Something went wrong!");
+            }
         }
         finally {
             setIsLoading(false);
@@ -62,15 +67,15 @@ export default function Signup() {
                 <form onSubmit={handleSubmit} autoComplete='off' className="flex flex-col items-center w-full gap-y-6 mt-8">
                     <div className="relative">
                         <MailOutlineIcon className="absolute top-3 left-2" />
-                        <input onChange={(e) => handleChange(e) } name='email' type="email" required={true} placeholder="E-mail" className={signUpComponentStyle.inputStyle} />
+                        <input onChange={(e) => handleChange(e)} name='email' type="email" required={true} placeholder="E-mail" className={signUpComponentStyle.inputStyle} />
                     </div>
                     <div className="relative">
                         <AccountCircleOutlinedIcon className="absolute top-3 left-2" />
-                        <input onChange={(e) => handleChange(e) } name='username' required={true} placeholder="Username" className={signUpComponentStyle.inputStyle} />
+                        <input onChange={(e) => handleChange(e)} name='username' required={true} placeholder="Username" className={signUpComponentStyle.inputStyle} />
                     </div>
                     <div className="relative">
                         <LockOutlinedIcon className="absolute top-3 left-2" />
-                        <input onChange={(e) => handleChange(e) } name='password' type="password" required={true} placeholder="Password" className={signUpComponentStyle.inputStyle} />
+                        <input onChange={(e) => handleChange(e)} name='password' type="password" required={true} placeholder="Password" className={signUpComponentStyle.inputStyle} />
                     </div>
                     <button className="w-80 h-12 bg-gradient-to-r from-violet-900 via-purple-700 to-red-500">{isLoading ? "..." : "Login to Your Account"}</button>
                     <Link href={"/"}>Do you already have an account? Log in</Link>

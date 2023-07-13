@@ -4,10 +4,11 @@ import '@/styles/navbar.css'
 import 'react-toastify/dist/ReactToastify.css';
 import type { AppProps } from 'next/app'
 import { ToastContainer } from 'react-toastify';
+import { SessionProvider } from 'next-auth/react';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <>
+    <SessionProvider>
       <Layout>
         <Component {...pageProps} />
       </Layout>
@@ -23,7 +24,7 @@ export default function App({ Component, pageProps }: AppProps) {
         pauseOnHover
         theme="dark"
       />
-    </>
+    </SessionProvider>
   )
 
 }
