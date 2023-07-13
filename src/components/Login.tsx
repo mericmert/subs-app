@@ -10,7 +10,7 @@ let loginComponentStyle: ComponentStyle = {
 export default function Login() {
     return (
         <div className="w-full h-screen flex flex-col justify-center items-center p-6 gap-y-16">
-            <Logo font_size='6xl'/>
+            <Logo font_size='text-6xl'/>
             <div className="login-form-container flex flex-col w-[70vw] h-2/3 items-center">
                 <div className="login-title-container text-center">
                     <h1 className="text-4xl font-semibold mb-2">Login to Your Account</h1>
@@ -26,7 +26,7 @@ export default function Login() {
                         <LockOutlinedIcon className="absolute top-3 left-2" />
                         <input name='password' type="password" required={true} placeholder="Password" className={loginComponentStyle.inputStyle} />
                     </div>
-                    <button className="w-80 h-12 bg-gradient-to-r from-violet-900 via-purple-700 to-red-500">Login to Your Account</button>
+                    <button className="w-80 h-12 bg-gradient-to-l from-violet-900 via-purple-700 to-red-500">Login to Your Account</button>
                     <Link href={"/signup"}>Don&apos;t you have an account? Sign up</Link>
                 </form>
             </div>

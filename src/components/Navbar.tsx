@@ -15,7 +15,7 @@ export default function Navbar() {
     return (
         <div className="navbar fixed flex flex-col w-[270px] h-screen shadow-sm shadow-neutral-500 text-white">
             <div className="logo-container p-6 ">
-                <Logo font_size="5xl" />
+                <Logo font_size="text-5xl" />
             </div>
             <ul className="relative navbar-items flex flex-col h-full text-lg">
                 <li>
