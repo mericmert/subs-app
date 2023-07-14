@@ -18,7 +18,7 @@ export default function Layout({ children }: LayoutProps) {
         return (
             <>
                 <Navbar session={session} />
-                <div className='ml-[270px]'>
+                <div className='ml-[500px]'>
                     {children}
                 </div>
             </>

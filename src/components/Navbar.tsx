@@ -26,7 +26,7 @@ export default function Navbar({session} : any) {
         router.push("/");
     }    
     return (
-        <div className="navbar fixed flex flex-col w-[270px] h-screen border-r-[.5px] border-neutral-700 text-white">
+        <div className="pl-64 navbar fixed flex flex-col w-[500px] h-screen border-r-[.5px] border-neutral-700 text-white">
             <div className="logo-container p-6 ">
                 <Logo font_size="text-5xl" />
             </div>

@@ -18,6 +18,7 @@ model User {
   followedBy User[]   @relation("UserFollows")
   following  User[]   @relation("UserFollows")
   profile    Profile?
+  Post       Post[]
 }
 
 model Profile {
@@ -27,4 +28,13 @@ model Profile {
   fullName String?
   bio      String?
   user     User    @relation(fields: [username], references: [username])
+}
+
+model Post {
+  id           Int      @id @default(autoincrement())
+  text_content String
+  imageUrl     String?
+  date         DateTime
+  author       User     @relation(fields: [username], references: [username])
+  username     String
 }

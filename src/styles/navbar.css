@@ -4,8 +4,9 @@
 
 .navbar-items li{
     display: block;
-    width: 100%;
+    width: 90%;
     height: 60px;
+    border-radius: 30px;
 }
 
 .navbar-items li:hover {

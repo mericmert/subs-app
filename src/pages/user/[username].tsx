@@ -7,6 +7,8 @@ import { getSession } from "next-auth/react";
 import { useState } from "react";
 
 import ProfileModal from "@/components/ProfileModal";
+import Post from "@/components/Post";
+import NewPost from "@/components/NewPost";
 
 type PageProps = {
     username: string;
@@ -15,11 +17,11 @@ type PageProps = {
 }
 
 
-export default function Profile({ data, session }: any) {
+export default function Profile({ data, session, profile_posts }: any) {
 
     const [open, setOpen] = useState<boolean>(false);
     const [userData, setData] = useState(data);
-    
+    console.log(profile_posts);
     if (!data) {
         return <UserError />;
     }
@@ -75,7 +77,7 @@ export default function Profile({ data, session }: any) {
                     <div className="stats flex flex-col">
                         <span>0 <span className="font-bold"> Followers</span></span>
                         <span>0 <span className="font-bold"> Following</span></span>
-                        <span>0 <span className="font-bold"> Post</span></span>
+                        <span>{profile_posts.length} <span className="font-bold"> Post</span></span>
                     </div>
                     <div className="button-container flex gap-x-2">
                         {selfProfile ?
@@ -91,6 +93,10 @@ export default function Profile({ data, session }: any) {
                     </div>
                 </div>
             </div>
+            <div className="w-3/4 m-auto">
+                {profile_posts.map((post : any, idx : number) => <Post key={idx} postData={post}/>)}
+            </div>
+            
         </div>
     )
 }
@@ -99,9 +105,11 @@ export const getServerSideProps: GetServerSideProps<any> = async (context) => {
     const { username } = context.query;
     const session = await getSession(context);
     let userData: any = {};
+    let profile_posts : any
     try {
         const profile = await axios.get(`${process.env.CANONICAL_URL}/api/user/${username}`);
         userData = profile.data;
+        profile_posts = (await axios.get(`${process.env.CANONICAL_URL}/api/posts/${username}`)).data
     }
     catch (err) {
         console.log(err);
@@ -110,7 +118,8 @@ export const getServerSideProps: GetServerSideProps<any> = async (context) => {
     return {
         props: JSON.parse(JSON.stringify({
             data: userData,
-            session: session
+            session: session,
+            profile_posts : profile_posts
         }))
     }
 }
