@@ -25,5 +25,6 @@ model Profile {
   username String  @unique
   imageUrl String?
   fullName String?
+  bio      String?
   user     User    @relation(fields: [username], references: [username])
 }

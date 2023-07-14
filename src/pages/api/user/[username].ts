@@ -9,11 +9,11 @@ export default async function handler(
   if (req.method === "GET") {
 
     const { username } = req.query;
-    let targetUsername : string | undefined;
+    let targetUsername: string | undefined;
     if (typeof username === "string") {
       targetUsername = username;
     }
-    else if (Array.isArray(username)){
+    else if (Array.isArray(username)) {
       targetUsername = username[0];
     }
 
@@ -25,6 +25,27 @@ export default async function handler(
 
     res.status(200).json(profile);
 
+  }
+
+
+  else if (req.method === "POST") {
+    const userData = req.body;
+    console.log(userData);
+    try {
+      await client.profile.update({
+        where : {
+          username : userData.username
+        },
+        data : {
+          fullName : userData.fullName,
+          bio : userData.bio
+        }
+      })
+      res.status(200).end();
+    }
+    catch (err) {
+      res.status(400).end();
+    }
   }
   else {
     return res.status(400).end();
