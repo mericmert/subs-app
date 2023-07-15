@@ -23,7 +23,7 @@ export default async function handler(
       }
     })
 
-    return res.status(200).json(profile);
+    res.status(200).json(profile);
 
   }
 
@@ -41,14 +41,14 @@ export default async function handler(
           bio : userData.bio
         }
       })
-      return res.status(200).end();
+      res.status(200).end();
     }
     catch (err) {
-      return res.status(400).end();
+      res.status(400).end();
     }
   }
   else {
-    return res.status(400).end();
+    res.status(400).end();
   }
 
 

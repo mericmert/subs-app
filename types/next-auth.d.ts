@@ -7,7 +7,14 @@ declare module "next-auth" {
         username : String;
     }
     interface Session {
-        username : String;
+        user : {
+            username : String;            
+        }
     }
-    
+    interface DefaultSession {
+        user : {
+            username : String;
+        }
+    }
+
 }

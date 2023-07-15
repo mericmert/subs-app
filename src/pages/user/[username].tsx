@@ -4,7 +4,7 @@ import axios from "axios";
 import { GetServerSideProps } from "next";
 import UserError from "@/components/Error";
 import { getSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import ProfileModal from "@/components/ProfileModal";
 import Post from "@/components/Post";
@@ -21,12 +21,17 @@ export default function Profile({ data, session, profile_posts }: any) {
 
     const [open, setOpen] = useState<boolean>(false);
     const [userData, setData] = useState(data);
-    console.log(profile_posts);
+
+    let selfProfile: boolean = data?.username === session.user.username;
+
+    useEffect(() => {
+        setData(data);
+    },[selfProfile])
+    
     if (!data) {
         return <UserError />;
     }
-    let selfProfile: boolean = data.username === session.user.username;
-
+    
     const openModal = () => {
         setOpen(true);
     }
@@ -114,7 +119,7 @@ export const getServerSideProps: GetServerSideProps<any> = async (context) => {
     catch (err) {
         console.log(err);
     }
-
+    console.log(userData);
     return {
         props: JSON.parse(JSON.stringify({
             data: userData,

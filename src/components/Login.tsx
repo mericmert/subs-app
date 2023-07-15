@@ -37,7 +37,7 @@ export default function Login() {
          });
          if (res?.ok){
             toast.success("You have succesfully logged in!");
-            router.push("/");
+            router.replace("/");
             
          }
          else{
