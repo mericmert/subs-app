@@ -22,10 +22,10 @@ export default async function handler(
         username: targetUsername
       }
     })
-    if (profile){
+    if (profile) {
       res.status(200).json(profile);
     }
-    else{
+    else {
       res.status(400).end();
     }
 
@@ -37,12 +37,12 @@ export default async function handler(
     console.log(userData);
     try {
       await client.profile.update({
-        where : {
-          username : userData.username
+        where: {
+          username: userData.username
         },
-        data : {
-          fullName : userData.fullName,
-          bio : userData.bio
+        data: {
+          fullName: userData.fullName,
+          bio: userData.bio
         }
       })
       res.status(200).end();

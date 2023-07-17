@@ -2,10 +2,10 @@ import { AuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import client from "@/lib/prismadb";
-import {compare} from 'bcrypt';
+import { compare } from 'bcrypt';
 
 export const authOptions: AuthOptions = {
-    secret : process.env.NEXTAUTH_URL,
+    secret: process.env.NEXTAUTH_URL,
     providers: [
         CredentialsProvider({
             name: "credentials",
@@ -32,37 +32,37 @@ export const authOptions: AuthOptions = {
                 if (!user.password) throw Error("Incorrect password!");
 
                 const isPasswordMatched = await compare(credentials.password, user.password);
-                
+
                 if (!isPasswordMatched) {
                     throw Error("Invalid password!");
                 }
                 console.log("signed in");
                 return {
-                    id : user.id.toString(),
-                    email : user.email,
+                    id: user.id.toString(),
+                    email: user.email,
                     username: user.username
                 }
             },
         })
     ],
-    callbacks : {
-        async jwt({token, user, account}){
+    callbacks: {
+        async jwt({ token, user, account }) {
             if (user) {
                 token.username = user.username
             }
             return token;
         },
-        async session({session, token, user}){
+        async session({ session, token, user }) {
             session.user = token;
             return session;
         }
     },
-    pages : {
-        signIn : "/"
+    pages: {
+        signIn: "/"
     },
-    session : {
-        strategy : "jwt",
-        maxAge : 30 * 24 * 60 * 60
+    session: {
+        strategy: "jwt",
+        maxAge: 30 * 24 * 60 * 60
     }
 
 }

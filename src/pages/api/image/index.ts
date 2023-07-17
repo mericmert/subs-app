@@ -9,7 +9,7 @@ export const config = {
   },
 };
 
-let file_path : string;
+let file_path: string;
 
 const readFile = (
   req: NextApiRequest,
@@ -28,7 +28,7 @@ const readFile = (
   return new Promise((resolve, reject) => {
     form.parse(req, (err, fields, files) => {
       if (err) reject(err);
-      resolve({ fields, files});
+      resolve({ fields, files });
     });
   });
 };
@@ -40,7 +40,7 @@ const handler: NextApiHandler = async (req, res) => {
     await fs.mkdir(path.join(process.cwd() + "/public", "/images"));
   }
   await readFile(req, true);
-  res.json({file_path});
+  res.json({ file_path });
 };
 
 export default handler;
