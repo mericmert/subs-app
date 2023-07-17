@@ -1,28 +1,29 @@
 import { NextApiRequest } from "next";
 import { NextApiResponse } from "next";
 import prisma from "@/lib/prismadb";
+import { Post } from "@prisma/client";
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<any>
+    res: NextApiResponse<Post[]>
 ) {
     if (req.method === "GET") {
         try {
             const posts = await prisma.post.findMany({
-               include : {
-                author : {
-                    include : {
-                        profile : true
+                include: {
+                    author: {
+                        include: {
+                            profile: true
+                        }
                     }
+                },
+                orderBy: {
+                    date: "desc"
                 }
-               },
-               orderBy : {
-                date : "desc"
-               }
             });
-            return res.status(200).json(posts);
+            if (posts) res.status(200).json(posts);
         }
         catch (err) {
-            return res.status(400).end();
+            res.status(400).end();
         }
     }
 

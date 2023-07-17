@@ -30,10 +30,10 @@ export default async function handler(
                     date: "desc"
                 }
             });
-            return res.status(200).json(posts);
+            if (posts) res.status(200).json(posts);
         }
         catch (err) {
-            return res.status(400).end();
+            res.status(400).end();
         }
     }
 

@@ -22,8 +22,12 @@ export default async function handler(
         username: targetUsername
       }
     })
-
-    res.status(200).json(profile);
+    if (profile){
+      res.status(200).json(profile);
+    }
+    else{
+      res.status(400).end();
+    }
 
   }
 

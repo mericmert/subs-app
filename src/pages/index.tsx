@@ -9,11 +9,11 @@ import axios from 'axios'
 
 const inter = Inter({ subsets: ['latin'] })
 
+/* refactored */
+export default function Home() {
 
-
-
-export default function Home({userData, posts} : any) {
   const { data: session, status } = useSession();
+  
   if (status === "authenticated") {
     return <Feed />;
   }

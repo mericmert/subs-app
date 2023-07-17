@@ -7,31 +7,35 @@ import { getSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 import ProfileModal from "@/components/ProfileModal";
-import Post from "@/components/Post";
-import NewPost from "@/components/NewPost";
+import Post from "@/components/Post/Post";
+import NewPost from "@/components/Post/NewPost";
+import { Profile, Post as PostDTO } from "user-types";
+import { Session } from "next-auth";
 
-type PageProps = {
-    username: string;
-    imageUrl: string;
-    fullName: string;
+type ProfileProps = {
+    profile_data?: Profile;
+    session?: Session;
+    profile_posts?: PostDTO[];
+}
+
+type ProfileNotFoundProps = {
+    noProfileFound : boolean;
 }
 
 
-export default function Profile({ data, session, profile_posts }: any) {
-
+export default function Profile({profile_data, session, profile_posts, noProfileFound} : ProfileProps & ProfileNotFoundProps) {
+    
     const [open, setOpen] = useState<boolean>(false);
-    const [userData, setData] = useState(data);
-
-    let selfProfile: boolean = data?.username === session.user.username;
+    const [profileData, setProfileData] = useState<Profile | undefined>(profile_data);
+    const [selfProfile] = useState<boolean>(profileData?.username === session?.user?.username);
 
     useEffect(() => {
-        setData(data);
-    },[selfProfile])
-    
-    if (!data) {
-        return <UserError />;
+        setProfileData(profileData);
+    }, [selfProfile, profileData])
+
+    if (noProfileFound) {
+        return <NoProfilePage/> 
     }
-    
     const openModal = () => {
         setOpen(true);
     }
@@ -42,8 +46,8 @@ export default function Profile({ data, session, profile_posts }: any) {
 
     const updateProfile = async () => {
         try {
-            const profile = await axios.get(`/api/user/${userData.username}`);
-            setData(profile.data);
+            const res = await axios.get(`/api/user/${profileData?.username}`);
+            setProfileData(res.data);
         }
         catch (err) {
             console.log("Profile couldn't be updated!");
@@ -55,7 +59,7 @@ export default function Profile({ data, session, profile_posts }: any) {
             {selfProfile && <ProfileModal
                 open={open}
                 closeModal={closeModal}
-                userData={userData}
+                userData={profileData}
                 updateProfile={updateProfile}
             />}
             <div className="profile-info min-h-64 w-3/4 m-auto py-4 flex flex-wrap gap-x-4 items-center pl-[3vw] border-neutral-900 border-b-2">
@@ -63,7 +67,7 @@ export default function Profile({ data, session, profile_posts }: any) {
                     <div className="relative photo-container h-40 w-40 rounded-full">
                         <Image
                             className="rounded-full"
-                            src={`/${userData.imageUrl ?? "default.webp"}`}
+                            src={`/${profileData?.imageUrl ?? "default.webp"}`}
                             alt="profile-photo"
                             fill={true}
                             sizes="40 40"
@@ -71,18 +75,18 @@ export default function Profile({ data, session, profile_posts }: any) {
                         />
                     </div>
                     <div className="username-container text-neutral-300">
-                        <span>@{userData.username}</span>
+                        <span>@{profileData?.username}</span>
                     </div>
                     <div>
-                        {userData.bio}
+                        {profileData?.bio}
                     </div>
                 </div>
                 <div className="ml-12 name-followers-container self-start w-96 py-4 flex flex-col gap-y-4">
-                    <h1 className="text-2xl">{userData.fullName}</h1>
+                    <h1 className="text-2xl">{profileData?.fullName}</h1>
                     <div className="stats flex flex-col">
                         <span>0 <span className="font-bold"> Followers</span></span>
                         <span>0 <span className="font-bold"> Following</span></span>
-                        <span>{profile_posts.length} <span className="font-bold"> Post</span></span>
+                        <span>{profile_posts?.length} <span className="font-bold"> Post</span></span>
                     </div>
                     <div className="button-container flex gap-x-2">
                         {selfProfile ?
@@ -99,32 +103,47 @@ export default function Profile({ data, session, profile_posts }: any) {
                 </div>
             </div>
             <div className="w-3/4 m-auto">
-                {profile_posts.map((post : any, idx : number) => <Post key={idx} postData={post}/>)}
+                {profile_posts?.map((post: any, idx: number) => <Post key={idx} postData={post} />)}
             </div>
-            
+
         </div>
     )
 }
 
-export const getServerSideProps: GetServerSideProps<any> = async (context) => {
+const NoProfilePage = () => {
+    return (
+        <>
+            <UserError />;
+        </>
+    )
+}
+
+
+
+
+export const getServerSideProps: GetServerSideProps<ProfileProps & ProfileNotFoundProps> = async (context) => {
     const { username } = context.query;
-    const session = await getSession(context);
-    let userData: any = {};
-    let profile_posts : any
-    try {
-        const profile = await axios.get(`${process.env.CANONICAL_URL}/api/user/${username}`);
-        userData = profile.data;
-        profile_posts = (await axios.get(`${process.env.CANONICAL_URL}/api/posts/${username}`)).data
+    const session: Session | null = await getSession(context);
+    if (session) {
+        try {
+            const profile_data: Profile = (await axios.get(`${process.env.CANONICAL_URL}/api/user/${username}`)).data;
+            const posts_data: PostDTO[] = (await axios.get(`${process.env.CANONICAL_URL}/api/posts/${username}`)).data;
+            return {
+                props: JSON.parse(JSON.stringify({
+                    profile_data: profile_data,
+                    session: session,
+                    profile_posts: posts_data,
+                    noProfileFound : false
+                }))
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
-    catch (err) {
-        console.log(err);
-    }
-    console.log(userData);
     return {
-        props: JSON.parse(JSON.stringify({
-            data: userData,
-            session: session,
-            profile_posts : profile_posts
-        }))
+        props: {
+            noProfileFound : true
+        }
     }
 }

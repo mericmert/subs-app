@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { SignInResponse, signIn } from "next-auth/react"
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
+
 let loginComponentStyle: ComponentStyle = {
     inputStyle: "bg-gray-800 w-80 h-12 outline-none border-0 p-2 pl-10"
 }

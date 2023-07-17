@@ -1,38 +1,38 @@
 import axios from 'axios';
-import { useSession } from 'next-auth/react';
 import Image from 'next/image'
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 import { toast } from 'react-toastify';
+import { Profile } from 'user-types';
 
-export default function NewPost({ userData, updatePosts }: any) {
-    
-    const [textContent, setTextContent] = useState("");
+export default function NewPost({ profileData, updatePosts }: { profileData: Profile | undefined, updatePosts: () => Promise<void> }) {
+
+    const [textContent, setTextContent] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [selectedImage, setSelectedImage] = useState("");
+    const [selectedImage, setSelectedImage] = useState<string>("");
     const [selectedFile, setSelectedFile] = useState<File>();
-    
-    
+
+
     const handleUpload = async () => {
-        const validFormats : string[] = [".jpg",".png",".jpeg",".webp"]
+        const validFormats: string[] = [".jpg", ".png", ".jpeg", ".webp"]
         let isValid: boolean = false;
         for (const format of validFormats) {
             if (selectedImage.endsWith(format)) isValid = true;
         }
-        if(selectedFile && !isValid) throw Error("Wrong file format!");
-        
+        if (selectedFile && !isValid) throw Error("Wrong file format!");
+
         try {
-          if (!selectedFile) return;
-          const formData = new FormData();
-          formData.append("myImage", selectedFile);
-          const { data } = await axios.post("/api/image", formData);
-          return data;
+            if (!selectedFile) return;
+            const formData = new FormData();
+            formData.append("myImage", selectedFile);
+            const { data } = await axios.post("/api/image", formData);
+            return data;
         } catch (error: any) {
-          console.log(error);
+            console.log(error);
         }
         return;
-      };
-    
+    };
+
 
 
     const createPost = async () => {
@@ -40,7 +40,7 @@ export default function NewPost({ userData, updatePosts }: any) {
         try {
             let image_data = await handleUpload();
             await axios.post("/api/posts/create", {
-                username: userData?.username,
+                username: profileData?.username,
                 text_content: textContent,
                 imageUrl: (image_data?.file_path)
             })
@@ -69,7 +69,7 @@ export default function NewPost({ userData, updatePosts }: any) {
                 <div className='relative w-16 h-16 rounded-full bg-neutral-900'>
                     <Image
                         className='rounded-full'
-                        src={`/${userData?.imageUrl ?? "default.webp"}`}
+                        src={`/${profileData?.imageUrl ?? "default.webp"}`}
                         alt="profile-avatar"
                         fill={true}
                         sizes='16 16'
@@ -92,7 +92,7 @@ export default function NewPost({ userData, updatePosts }: any) {
                             setSelectedFile(file);
                         }
                     }} />
-                    <span className='absolute left-0 -bottom-8'>
+                    <span className='absolute left-0 -bottom-8 cursor-pointer'>
                         <InsertPhotoOutlinedIcon />
                         <span>{selectedImage}</span>
                     </span>

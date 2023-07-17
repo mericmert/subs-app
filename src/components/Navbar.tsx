@@ -6,20 +6,19 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import { getSession, signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-import { GetServerSideProps } from "next";
+import { Session } from "next-auth";
 
 let NavbarComponentStyle: ComponentStyle = {
     linkStyle: "flex items-center gap-x-2 w-full h-full p-6"
 }
 
 
-export default function Navbar({session} : any) {
+export default function Navbar({session} : {session : Session}) {
     
     const router = useRouter();
-
-    const logout = () => {
+    const logout = () : void => {
         signOut({
             redirect : false
         })
@@ -38,7 +37,7 @@ export default function Navbar({session} : any) {
                     </Link>
                 </li>
                 <li>
-                    <Link className={NavbarComponentStyle.linkStyle} href={`/user/${session.user.username}`}>
+                    <Link className={NavbarComponentStyle.linkStyle} href={`/user/${session.user?.username}`}>
                         <AccountCircleOutlinedIcon />
                         Profile
                     </Link>

@@ -1,12 +1,14 @@
 import Image from "next/image"
 import Link from "next/link"
+import { Post } from "user-types"
 
-export default function Post({ postData }: any) {
+export default function Post({ postData }: {postData : Post}) {
     return (
         <div className="min-w-[480px] w-full flex border-neutral-700 border-[.25px] pr-8 py-3 ">
             <div className="w-[20%] flex p-3 justify-center">
                 <div className="photo-container h-16 w-16 bg-neutral-900 rounded-full">
                     <Link className="relative block h-full w-full" href={`/user/${postData.author.profile.username}`}>
+                    
                         {postData.author.profile.imageUrl ?
                             <Image
                                 className="rounded-full border-2 border-neutral-900"
