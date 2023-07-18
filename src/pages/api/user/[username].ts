@@ -9,40 +9,45 @@ export default async function handler(
   if (req.method === "GET") {
 
     const { username } = req.query;
-    let targetUsername: string | undefined;
-    if (typeof username === "string") {
-      targetUsername = username;
-    }
-    else if (Array.isArray(username)) {
-      targetUsername = username[0];
-    }
-
-    const profile = await client.profile.findUnique({
-      where: {
-        username: targetUsername
-      }
-    })
-    if (profile) {
+    const target_username: string | undefined = Array.isArray(username) ? username[0] : username;
+    try {
+      const profile = await client.user.findUniqueOrThrow({
+        where: {
+          username: target_username
+        },
+        select: {
+          profile: true,
+          username: true
+        }
+      });
       res.status(200).json(profile);
     }
-    else {
+    catch (err) {
+      console.log(err);
       res.status(400).end();
     }
+
 
   }
 
 
   else if (req.method === "POST") {
     const userData = req.body;
-    console.log(userData);
     try {
-      await client.profile.update({
+      await client.user.update({
         where: {
           username: userData.username
         },
         data: {
-          fullName: userData.fullName,
-          bio: userData.bio
+          profile: {
+            update: {
+              fullName: userData.fullName,
+              bio: userData.bio
+            }
+          }
+        },
+        include: {
+          profile: true
         }
       })
       res.status(200).end();

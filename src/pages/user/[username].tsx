@@ -28,7 +28,6 @@ export default function Profile({profile_data, session, profile_posts, noProfile
     const [open, setOpen] = useState<boolean>(false);
     const [profileData, setProfileData] = useState<Profile | undefined>(profile_data);
     const [selfProfile] = useState<boolean>(profileData?.username === session?.user?.username);
-
     useEffect(() => {
         setProfileData(profileData);
     }, [selfProfile, profileData])
@@ -67,7 +66,7 @@ export default function Profile({profile_data, session, profile_posts, noProfile
                     <div className="relative photo-container h-40 w-40 rounded-full">
                         <Image
                             className="rounded-full"
-                            src={`/${profileData?.imageUrl ?? "default.webp"}`}
+                            src={`/${profileData?.profile.imageUrl ?? "default.webp"}`}
                             alt="profile-photo"
                             fill={true}
                             sizes="40 40"
@@ -78,11 +77,11 @@ export default function Profile({profile_data, session, profile_posts, noProfile
                         <span>@{profileData?.username}</span>
                     </div>
                     <div>
-                        {profileData?.bio}
+                        {profileData?.profile.bio}
                     </div>
                 </div>
                 <div className="ml-12 name-followers-container self-start w-96 py-4 flex flex-col gap-y-4">
-                    <h1 className="text-2xl">{profileData?.fullName}</h1>
+                    <h1 className="text-2xl">{profileData?.profile.fullName}</h1>
                     <div className="stats flex flex-col">
                         <span>0 <span className="font-bold"> Followers</span></span>
                         <span>0 <span className="font-bold"> Following</span></span>
@@ -138,7 +137,7 @@ export const getServerSideProps: GetServerSideProps<ProfileProps & ProfileNotFou
             }
         }
         catch (err) {
-            console.log(err);
+            
         }
     }
     return {

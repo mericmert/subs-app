@@ -7,18 +7,29 @@ export default async function handler(
 ) {
     if (req.method === "POST") {
         const post_data = {
-            ...req.body,
-            date : new Date() 
-        } 
+            username: req.body.username,
+            text_content: req.body.text_content,
+            imageUrl: req.body.imageUrl,
+            date: new Date()
+        }
         try {
             await prisma.post.create({
-                data : post_data
+                data: {
+                    text_content : post_data.text_content,
+                    imageUrl : post_data.imageUrl,
+                    date : post_data.date,
+                    author : {
+                        connect : {
+                            username : post_data.username
+                        }
+                    }
+                }
             });
-            return res.status(200).end();
+            res.status(200).end();
         }
         catch (err) {
             console.log(err);
-            return res.status(400).end();
+            res.status(400).end();
         }
     }
 

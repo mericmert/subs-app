@@ -9,16 +9,23 @@ export default async function handler(
     if (req.method === "GET") {
         try {
             const posts = await prisma.post.findMany({
-                include: {
-                    author: {
-                        include: {
-                            profile: true
+               include : {
+                    author : {
+                        select : {
+                            username : true,
+                            profile : {
+                                select : {
+                                    fullName : true,
+                                    imageUrl: true
+                                }
+                            }
                         }
                     }
-                },
-                orderBy: {
-                    date: "desc"
-                }
+               },
+               orderBy : {
+                    date : "desc"
+               }
+               
             });
             if (posts) res.status(200).json(posts);
         }

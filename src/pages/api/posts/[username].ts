@@ -8,22 +8,24 @@ export default async function handler(
     if (req.method === "GET") {
         try {
             const { username } = req.query;
-            let targetUsername: string | undefined;
-            if (typeof username === "string") {
-                targetUsername = username;
-            }
-            else if (Array.isArray(username)) {
-                targetUsername = username[0];
-            }
+            const target_username: string | undefined = Array.isArray(username) ? username[0] : username;
             const posts = await prisma.post.findMany({
                 where: {
-                    username: targetUsername
+                    author: {
+                        username: target_username
+                    }
                 },
                 include: {
                     author: {
-                        include: {
-                            profile: true
-                        }
+                        select: {
+                            username: true,
+                            profile: {
+                                select: {
+                                    fullName: true,
+                                    imageUrl: true
+                                }
+                            }
+                        },
                     }
                 },
                 orderBy: {
@@ -33,6 +35,7 @@ export default async function handler(
             if (posts) res.status(200).json(posts);
         }
         catch (err) {
+            console.log(err)
             res.status(400).end();
         }
     }

@@ -3,9 +3,12 @@ declare module "user-types" {
 
     export interface Profile {
         username: String,
-        fullName?: String,
-        bio?: String,
-        imageUrl?: String
+        profile : {
+            fullName?: String,
+            bio?: String,
+            imageUrl?: String
+        }
+       
     }
 
     export interface Post {

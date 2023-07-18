@@ -5,41 +5,43 @@ import { Prisma, User } from "@prisma/client";
 
 
 
+
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<User>) {
-    
+
     if (req.method !== "POST") return res.status(405).end();
 
     try {
-        const { email, username, password } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
+        await client.$transaction(async () => {
+            const { email, username, password } = req.body;
+            const hashedPassword = await bcrypt.hash(password, 10);
 
-        const user = await client.user.create({
-            data: {
-                email,
-                username,
-                password: hashedPassword
-            },
+            const user = await client.user.create({
+                data: {
+                    email,
+                    username,
+                    password: hashedPassword
+                },
+            })
+
+            //associated profile
+            await client.profile.create({
+                data: {
+                    id : user.id,
+                    fullName: user.username,
+                }
+            })
+            res.status(200).json(user);
+
         })
-
-        //associated profile
-        await client.profile.create({
-            data : {
-                username : username,
-                fullName : username,
-            }
-        })
-
-        return res.status(200).json(user);
-
     }
     catch (error) {
-        if (error instanceof Prisma.PrismaClientKnownRequestError){
-            return res.status(409).end()   
+        if (error instanceof Prisma.PrismaClientKnownRequestError) {
+            res.status(409).end()
         }
-        else{
-            return res.status(400).end();
+        else {
+            res.status(400).end();
         }
     }
 

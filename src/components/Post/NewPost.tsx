@@ -69,7 +69,7 @@ export default function NewPost({ profileData, updatePosts }: { profileData: Pro
                 <div className='relative w-16 h-16 rounded-full bg-neutral-900'>
                     <Image
                         className='rounded-full'
-                        src={`/${profileData?.imageUrl ?? "default.webp"}`}
+                        src={`/${profileData?.profile.imageUrl ?? "default.webp"}`}
                         alt="profile-avatar"
                         fill={true}
                         sizes='16 16'
@@ -99,7 +99,7 @@ export default function NewPost({ profileData, updatePosts }: { profileData: Pro
                 </label>
 
             </div>
-            <button onClick={createPost} className='absolute right-8 bottom-3 w-20 h-6 bg-gradient-to-r from-blue-500 text-sm to-indigo-500 rounded-md'>
+            <button onClick={createPost} className='absolute right-8 bottom-3 w-20 h-7 bg-gradient-to-r from-blue-500 text-sm to-indigo-500 rounded-md'>
                 {isLoading ? "..." : "Post"}
             </button>
         </div>

@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Post } from "user-types"
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 export default function Post({ postData }: {postData : Post}) {
     return (
@@ -49,7 +50,7 @@ export default function Post({ postData }: {postData : Post}) {
                             priority={true}
                         />}
                 </div>
-
+            <div className="flex justify-end gap-x-2">0<FavoriteBorderIcon/></div>
             </div>
         </div>
     )
