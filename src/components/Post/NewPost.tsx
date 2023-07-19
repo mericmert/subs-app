@@ -69,7 +69,7 @@ export default function NewPost({ profileData, updatePosts }: { profileData: Pro
                 <div className='relative w-16 h-16 rounded-full bg-neutral-900'>
                     <Image
                         className='rounded-full'
-                        src={`/${profileData?.profile.imageUrl ?? "default.webp"}`}
+                        src={profileData?.profile.imageUrl ? `/images/${profileData?.profile.imageUrl}` : "/default.webp"}
                         alt="profile-avatar"
                         fill={true}
                         sizes='16 16'

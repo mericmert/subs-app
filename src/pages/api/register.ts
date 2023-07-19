@@ -29,7 +29,7 @@ export default async function handler(
             await client.profile.create({
                 data: {
                     id : user.id,
-                    fullName: user.username,
+                    fullName: username,
                 }
             })
             res.status(200).json(user);

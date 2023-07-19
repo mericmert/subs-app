@@ -42,7 +42,8 @@ export default async function handler(
           profile: {
             update: {
               fullName: userData.fullName,
-              bio: userData.bio
+              bio: userData.bio,
+              imageUrl: userData.imageUrl
             }
           }
         },

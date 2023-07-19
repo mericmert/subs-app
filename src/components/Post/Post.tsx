@@ -13,7 +13,7 @@ export default function Post({ postData }: {postData : Post}) {
                         {postData.author.profile.imageUrl ?
                             <Image
                                 className="rounded-full border-2 border-neutral-900"
-                                src={`/${postData.author.profile.imageUrl}`}
+                                src={postData.author.profile.imageUrl ? `/images/${postData.author.profile.imageUrl}` : "/default.webp"}
                                 alt="phone"
                                 fill={true}
                                 sizes="16 16"
